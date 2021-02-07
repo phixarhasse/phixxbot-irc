@@ -16,9 +16,14 @@ headers = {"Client-Id": CLIENT_ID, "Authorization": "Bearer " + OAUTH2_TOKEN}
 while(True):
     for channel in CHANNELS:
         parameters = {"user_login": channel}
-        response = requests.request("GET", TWITCH_API_URL, params=parameters, headers=headers)
-        print("Twitch repsonse:", response.status_code)
-        responseJson = response.json()
+        try:
+            response = requests.request("GET", TWITCH_API_URL, params=parameters, headers=headers)
+            print("Twitch repsonse:", response.status_code)
+            responseJson = response.json()
+        except Exception as e:
+            print(e)
+            time.sleep(60)
+            continue
 
         # Channel has gone live
         if(response.ok and (len(responseJson["data"]) > 0) and not CHANNELS[channel]):
@@ -28,8 +33,8 @@ while(True):
 
         # Channel was live and gone offline
         elif(response.ok and CHANNELS[channel] and len(responseJson["data"]) == 0):
-            print("Channel twitch.tv/" + channel + " has gone offline.")
-            irc.send('PRIVMSG', '#dtek', "Channel twitch.tv/" + channel + " has gone offline. See you next time!")
+            print("Channel twitch.tv/" + channel + " has gone offline. See you next time!")
+            #irc.send('PRIVMSG', '#dtek', "Channel twitch.tv/" + channel + " has gone offline. See you next time!")
             CHANNELS[channel] = False
 
         # Twitch error
@@ -39,4 +44,4 @@ while(True):
         # None of the selected channels are live
         else:
             print("Channel twitch.tv/" + channel + " is not live. *cricket noise*")
-    time.sleep(30)
+    time.sleep(45)
