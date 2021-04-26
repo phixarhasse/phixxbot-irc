@@ -12,16 +12,17 @@ TWITCH_TOKEN_API = "https://id.twitch.tv/oauth2/token"
 CHANNELS = {"djphixx" : False,
             "drsldr"  : False}
 
-# Set up IRC connection
-irc = miniirc.IRC('irc.dtek.se', 6697, 'PhixxBot', ['#dtek'], verify_ssl=False)
-
 def main():
     token = authenticate()
     if(token == ""):
-        sys.exit("Could not authenticate to Twitch. Exiting.")
+        print("Could not authenticate to Twitch. Exiting.")
+        quit()
 
     headers = {"Client-Id": CLIENT_ID, "Authorization": "Bearer " + token}
+    # Set up IRC connection
+    irc = miniirc.IRC('irc.dtek.se', 6697, 'PhixxBot', ['#dtek'], verify_ssl=False)
     irc.send('PRIVMSG', '#dtek', "I'm alive for realz now!")
+
     while(True):
         break
         try:
@@ -69,7 +70,7 @@ def authenticate():
         json = response.json()
         return json["access_token"]
     else:
-        print("Error during authentication: " + response.status_code + " " + response.reason)
+        print("Error during authentication:", response.status_code, response.reason)
         return ""
 
 if(__name__ == "__main__"):
