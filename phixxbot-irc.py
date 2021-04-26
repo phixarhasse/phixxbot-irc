@@ -15,7 +15,6 @@ CHANNELS = {"djphixx" : False,
 # Set up IRC connection
 irc = miniirc.IRC('irc.dtek.se', 6697, 'PhixxBot', ['#dtek'], verify_ssl=False)
 
-
 def main():
     token = authenticate()
     if(token == ""):
@@ -60,7 +59,6 @@ def main():
             sys.exit("Keyboard interruption detected. Exiting.")
 
 def authenticate():
-
     parameters={ "client_id" : CLIENT_ID, "client_secret":  CLIENT_SECRET, "grant_type": "client_credentials" }
     try:
         response = requests.request("POST", TWITCH_TOKEN_API, params=parameters)
@@ -73,8 +71,6 @@ def authenticate():
     else:
         print("Error during authentication: " + response.status_code + " " + response.reason)
         return ""
-
-
 
 if(__name__ == "__main__"):
     main()
