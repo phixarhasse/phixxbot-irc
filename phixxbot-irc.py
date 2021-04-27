@@ -21,10 +21,9 @@ def main():
     headers = {"Client-Id": CLIENT_ID, "Authorization": "Bearer " + token}
     # Set up IRC connection
     irc = miniirc.IRC('irc.dtek.se', 6697, 'PhixxBot', ['#dtek'], verify_ssl=False)
-    irc.send('PRIVMSG', '#dtek', "I'm alive for realz now!")
+    irc.send('PRIVMSG', '#dtek', "I'm alive!")
 
     while(True):
-        break
         try:
             for channel in CHANNELS:
                 parameters = {"user_login": channel}
@@ -57,7 +56,9 @@ def main():
                     print("Channel twitch.tv/" + channel + " is not live. *cricket noise*")
             time.sleep(45)
         except KeyboardInterrupt:
-            sys.exit("Keyboard interruption detected. Exiting.")
+            print("Keyboard interrupt detected. Exiting.")
+            irc.send('PRIVMSG', '#dtek', "Bye bye!")
+            quit()
 
 def authenticate():
     parameters={ "client_id" : CLIENT_ID, "client_secret":  CLIENT_SECRET, "grant_type": "client_credentials" }
